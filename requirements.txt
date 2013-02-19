@@ -5,3 +5,5 @@ nose>=1.2.1
 steadymark>=0.4.5
 sure>=1.1.7
 coverage>=3.6
+xlrd>=0.9.0
+xlwt>=0.7.4
