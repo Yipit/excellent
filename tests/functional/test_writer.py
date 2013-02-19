@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-
+import os
 from excellent import Writer
 from sure import expect
 
@@ -53,5 +53,32 @@ def test_writing_with_nondefault_delimiter():
         "Country;Revenue",
         "Argentina;14500025",
         "Brazil;145002495",
+        "",
+    ]))
+
+
+def test_writing_to_a_file():
+    "Writer should be able to write to a file"
+    # Given a temporary file
+    tmpfile = open('/tmp/test_1.csv', 'w+')
+
+    # And CSV writer pointing to that tempfile
+    writer = Writer(format="csv", delimiter=";", output=tmpfile)
+
+    # And some data
+    writer.write([
+        {"Country": "USA", "Revenue": 22222},
+        {"Country": "Canada", "Revenue": 33333},
+    ])
+
+    # When the writer gets saved
+    writer.save()
+
+    # Then the file exists
+    os.path.exists(tmpfile.name).should.be.true
+    expect(open(tmpfile.name).read()).to.equal("\r\n".join([
+        "Country;Revenue",
+        "USA;22222",
+        "Canada;33333",
         "",
     ]))

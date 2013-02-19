@@ -6,9 +6,12 @@ from StringIO import StringIO
 
 
 class Writer(object):
-    def __init__(self, format, delimiter=','):
+    def __init__(self, format, delimiter=',', output=None):
         self.format = format
-        self.buffer = StringIO()
+        if not output:
+            output = StringIO()
+
+        self.buffer = output
         self.delimiter = delimiter
 
     def write(self, data):
@@ -18,6 +21,9 @@ class Writer(object):
                 csv_writer.writerow(row.keys())
 
             csv_writer.writerow(row.values())
+
+    def save(self):
+        self.buffer.close()
 
     def get_value(self):
         return self.buffer.getvalue()
