@@ -16,7 +16,7 @@ def test_write_data_with_header_to_csv():
     writer.write(data)
 
     # Then the written to data should match our expectation
-    (expect(writer.get_value())
+    (expect(writer.buffer.getvalue())
      .to.equal("Country,Revenue\r\nArgentina,14500025\r\n"))
 
 
@@ -31,7 +31,7 @@ def test_write_data_with_header_and_multiple_rows_to_csv():
     writer.write(data)
 
     # Then the written to data should match our expectation
-    expect(writer.get_value()).to.equal("\r\n".join([
+    expect(writer.buffer.getvalue()).to.equal("\r\n".join([
         "Country,Revenue",
         "Argentina,14500025",
         "Brazil,145002495",
@@ -50,7 +50,7 @@ def test_writing_with_nondefault_delimiter():
     writer.write(data)
 
     # Then the written to data should match our expectation
-    expect(writer.get_value()).to.equal("\r\n".join([
+    expect(writer.buffer.getvalue()).to.equal("\r\n".join([
         "Country;Revenue",
         "Argentina;14500025",
         "Brazil;145002495",

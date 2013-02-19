@@ -13,6 +13,3 @@ class Writer(object):
 
     def save(self):
         self.buffer.close()
-
-    def get_value(self):
-        return self.buffer.getvalue()
