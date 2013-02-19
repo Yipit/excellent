@@ -1,0 +1,7 @@
+*.json
+.coverage
+*.log
+*.pyc
+*-egg-info
+dist
+*.egg-info
