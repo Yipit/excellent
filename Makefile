@@ -10,10 +10,13 @@ install_deps:
 unit: clean
 	@nosetests --with-coverage --stop --cover-package=excellent --verbosity=2 -s tests/unit/
 
+functional: clean
+	@nosetests --with-coverage --stop --cover-package=excellent --verbosity=2 -s tests/functional/
+
 docs:
 	@steadymark README.md
 
-test: unit integration docs
+test: unit functional docs
 
 clean:
 	@printf "Cleaning up files that are already in .gitignore... "
