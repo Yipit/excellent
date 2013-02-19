@@ -2,13 +2,14 @@
 # -*- coding: utf-8 -*-
 import os
 from excellent import Writer
+from excellent.backends import CSV
 from sure import expect
 
 
 def test_write_data_with_header_to_csv():
     "Writer should write data with header correctly in CSV format"
     # Given a CSV writer
-    writer = Writer(format="csv")
+    writer = Writer(backend=CSV())
 
     # When we write some data
     data = [{"Country": "Argentina", "Revenue": 14500025}]
@@ -22,7 +23,7 @@ def test_write_data_with_header_to_csv():
 def test_write_data_with_header_and_multiple_rows_to_csv():
     "Writer should write data with header and multiple rows correctly in CSV format"
     # Given a CSV writer
-    writer = Writer(format="csv")
+    writer = Writer(backend=CSV())
 
     # When we write some data
     data = [{"Country": "Argentina", "Revenue": 14500025},
@@ -41,7 +42,7 @@ def test_write_data_with_header_and_multiple_rows_to_csv():
 def test_writing_with_nondefault_delimiter():
     "Writer should allow nondefault delimiter"
     # Given a CSV writer
-    writer = Writer(format="csv", delimiter=";")
+    writer = Writer(backend=CSV(delimiter=";"))
 
     # When we write some data
     data = [{"Country": "Argentina", "Revenue": 14500025},
@@ -63,7 +64,7 @@ def test_writing_to_a_file():
     tmpfile = open('/tmp/test_1.csv', 'w+')
 
     # And CSV writer pointing to that tempfile
-    writer = Writer(format="csv", delimiter=";", output=tmpfile)
+    writer = Writer(backend=CSV(delimiter=";"), output=tmpfile)
 
     # And some data
     writer.write([
