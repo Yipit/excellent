@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+from collections import OrderedDict
 from StringIO import StringIO
 from excellent.backends import CSV, XL
 
@@ -12,6 +13,7 @@ class Writer(object):
         self.buffer = output or StringIO()
 
     def write(self, data):
+        data = map(OrderedDict, data)
         self.backend.write(data, self.buffer)
 
     def save(self):

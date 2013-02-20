@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import os
+from collections import OrderedDict
 from excellent import Writer, CSV
 from sure import expect
 
@@ -11,7 +12,7 @@ def test_write_data_with_header_to_csv():
     writer = Writer(backend=CSV())
 
     # When we write some data
-    data = [{"Country": "Argentina", "Revenue": 14500025}]
+    data = [OrderedDict([("Country", "Argentina"), ("Revenue", 14500025)])]
     writer.write(data)
 
     # Then the written to data should match our expectation
@@ -25,8 +26,10 @@ def test_write_data_with_header_and_multiple_rows_to_csv():
     writer = Writer(backend=CSV())
 
     # When we write some data
-    data = [{"Country": "Argentina", "Revenue": 14500025},
-            {"Country": "Brazil", "Revenue": 145002495}]
+    data = [
+        OrderedDict([("Country", "Argentina"), ("Revenue", 14500025)]),
+        OrderedDict([("Country", "Brazil"), ("Revenue", 145002495)]),
+    ]
     writer.write(data)
 
     # Then the written to data should match our expectation
@@ -44,8 +47,10 @@ def test_writing_with_nondefault_delimiter():
     writer = Writer(backend=CSV(delimiter=";"))
 
     # When we write some data
-    data = [{"Country": "Argentina", "Revenue": 14500025},
-            {"Country": "Brazil", "Revenue": 145002495}]
+    data = [
+        OrderedDict([("Country", "Argentina"), ("Revenue", 14500025)]),
+        OrderedDict([("Country", "Brazil"), ("Revenue", 145002495)]),
+    ]
     writer.write(data)
 
     # Then the written to data should match our expectation
@@ -67,8 +72,8 @@ def test_writing_to_a_file():
 
     # And some data
     writer.write([
-        {"Country": "USA", "Revenue": 22222},
-        {"Country": "Canada", "Revenue": 33333},
+        OrderedDict([("Country", "USA"), ("Revenue", 22222)]),
+        OrderedDict([("Country", "Canada"), ("Revenue", 33333)]),
     ])
 
     # When the writer gets saved

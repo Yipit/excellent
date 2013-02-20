@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+from collections import OrderedDict
 from excellent import Writer
 from mock import Mock
 
@@ -46,12 +47,12 @@ def test_writer_writes():
     writer = Writer(backend)
 
     # When I write data
-    data = 'some awesome data'
+    data = [[('some awesome key', 'some awesome value')]]
     writer.write(data)
 
     # Then the backend.write should have been called once with
     # data and writer.buffer
-    backend.write.assert_called_once_with('some awesome data',
+    backend.write.assert_called_once_with([OrderedDict(data[0])],
                                           writer.buffer)
 
 

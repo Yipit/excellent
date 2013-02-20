@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
+
+from collections import OrderedDict
 from mock import Mock, call, patch
 from sure import expect
 from excellent import XL
@@ -234,9 +236,10 @@ def test_write_with_current_sheet_no_current_row_and_no_rows():
 
     # And some data
     data = [
-        {'Name': 'Chuck Norris', 'Power': 'unlimited'},
-        {'Name': 'Steven Seagal', 'Power': 'break necks'},
+        [('Name', 'Chuck Norris'), ('Power', 'unlimited')],
+        [('Name', 'Steven Seagal'), ('Power', 'break necks')],
     ]
+    data = map(OrderedDict, data)
     workbook = Mock()
     output = Mock()
 
@@ -275,8 +278,8 @@ def test_write_with_current_sheet_and_current_row():
 
     # And some data
     data = [
-        {'Name': 'Chuck Norris', 'Power': 'unlimited'},
-        {'Name': 'Steven Seagal', 'Power': 'break necks'},
+        OrderedDict([('Name', 'Chuck Norris'), ('Power', 'unlimited')]),
+        OrderedDict([('Name', 'Steven Seagal'), ('Power', 'break necks')]),
     ]
     workbook = Mock()
     output = Mock()

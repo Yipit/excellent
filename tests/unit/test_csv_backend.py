@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+from collections import OrderedDict
 from mock import Mock, call, patch
 from excellent import CSV
 
@@ -20,8 +21,9 @@ def test_write(csv):
     # And data
 
     data = [
-        {'Superhero': 'Superman', 'Weakness': 'Kryptonite'},
-        {'Superhero': 'Spiderman', 'Weakness': 'Maryjane'}]
+        OrderedDict([('Superhero', 'Superman'), ('Weakness', 'Kryptonite')]),
+        OrderedDict([('Superhero', 'Spiderman'), ('Weakness', 'Maryjane')]),
+    ]
 
     # When we write data to output
     csv_backend.write(data, output)
@@ -32,7 +34,7 @@ def test_write(csv):
     # And writerow received the appropriate calls
 
     csv_writer.writerow.assert_has_calls([
-        call(["Weakness", "Superhero"]),
-        call(["Kryptonite", "Superman"]),
-        call(["Maryjane", "Spiderman"]),
+        call(["Superhero", "Weakness"]),
+        call(["Superman", "Kryptonite"]),
+        call(["Spiderman", "Maryjane"]),
     ])
