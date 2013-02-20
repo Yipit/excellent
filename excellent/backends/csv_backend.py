@@ -14,3 +14,6 @@ class CSV(object):
                 csv_writer.writerow(row.keys())
 
             csv_writer.writerow(row.values())
+
+    def save(self, output):
+        output.close()

@@ -12,4 +12,4 @@ class Writer(object):
         self.backend.write(data, self.buffer)
 
     def save(self):
-        self.buffer.close()
+        self.backend.save(self.buffer)
