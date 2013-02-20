@@ -14,7 +14,7 @@ functional: clean
 	@nosetests --with-coverage --stop --cover-package=excellent --verbosity=2 -s tests/functional/
 
 docs:
-	@steadymark README.md
+	@PYTHONPATH=. steadymark README.md
 
 test: unit functional docs
 
