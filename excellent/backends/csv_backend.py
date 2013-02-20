@@ -1,5 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+
+
 import csv
 
 from .base import BaseBackend
@@ -7,7 +10,7 @@ from .base import BaseBackend
 
 class CSV(BaseBackend):
     def __init__(self, delimiter=','):
-        self.delimiter = delimiter
+        self.delimiter = bytes(delimiter)
         self.current_row = 0
 
     def write(self, data, output):

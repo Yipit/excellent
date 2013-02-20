@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+
 import os
 from collections import OrderedDict
 from excellent import Writer, CSV
@@ -21,7 +23,8 @@ def test_write_data_with_header_to_csv():
 
 
 def test_write_data_with_header_and_multiple_rows_to_csv():
-    "Writer should write data with header and multiple rows correctly in CSV format"
+    ("Writer should write data with header and multiple "
+     "rows correctly in CSV format")
     # Given a CSV writer
     writer = Writer(backend=CSV())
 
@@ -41,8 +44,29 @@ def test_write_data_with_header_and_multiple_rows_to_csv():
     ]))
 
 
-def test_writing_with_nondefault_delimiter():
-    "Writer should allow nondefault delimiter"
+def test_writing_with_nondefault_delimiter_byte():
+    "Writer should allow nondefault delimiter (byte)"
+    # Given a CSV writer
+    writer = Writer(backend=CSV(delimiter=b";"))
+
+    # When we write some data
+    data = [
+        OrderedDict([("Country", "Argentina"), ("Revenue", 14500025)]),
+        OrderedDict([("Country", "Brazil"), ("Revenue", 145002495)]),
+    ]
+    writer.write(data)
+
+    # Then the written to data should match our expectation
+    expect(writer.buffer.getvalue()).to.equal("\r\n".join([
+        "Country;Revenue",
+        "Argentina;14500025",
+        "Brazil;145002495",
+        "",
+    ]))
+
+
+def test_writing_with_nondefault_delimiter_unicode():
+    "Writer should allow nondefault delimiter (unicode)p"
     # Given a CSV writer
     writer = Writer(backend=CSV(delimiter=";"))
 
