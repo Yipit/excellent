@@ -4,7 +4,7 @@ Python library for writing CSV and XLS files from list of
 [OrderedDict](http://docs.python.org/2/library/collections.html#collections.OrderedDict)
 or just a list of lists containing 2-item tuples.
 
-# Installing 
+# Installing
 
 ```shell
 pip install excellent
@@ -17,13 +17,24 @@ from collections import OrderedDict
 from excellent import Writer, XL
 
 output = open("superhero-database.xls", "wb")
-excel = Writer(XL(), output)
+sheet_manager = XL()
 
+excel = Writer(sheet_manager, output)
+
+sheet_manager.use_sheet("Weaknesses")
 excel.write([
     OrderedDict([('Superhero', 'Superman'), ('Weakness', 'Kryptonite')]),
     OrderedDict([('Superhero', 'Spiderman'), ('Weakness', 'Maryjane')]),
 ])
 
+sheet_manager.use_sheet("Special Powers")
+excel.write([
+    OrderedDict([('Superhero', 'Superman'), ('Super Powers', 'X-Ray vision')]),
+    OrderedDict([('Superhero', 'Spiderman'), ('Super Powers', 'Release web')]),
+    OrderedDict([('Superhero', 'Batman'), ('Super Powers', 'Money')]),
+])
+
+sheet_manager.use_sheet("Weaknesses")
 excel.write([
     OrderedDict([('Superhero', 'Batman'), ('Weakness', 'Social Interactions')]),
 ])
@@ -33,7 +44,7 @@ excel.write([
 excel.save()
 
 # now open superhero-database.xls and be happy
-``` 
+```
 
 ![https://raw.github.com/Yipit/excellent/master/docs/superhero-database.png?login=suneel0101&token=79faadd827d16c56064ea3845850f7b8](https://raw.github.com/Yipit/excellent/master/docs/superhero-database.png?login=suneel0101&token=79faadd827d16c56064ea3845850f7b8)
 
