@@ -1,6 +1,8 @@
 # Excellent
 
-Python library for writing CSV and XLS files from list of dictionaries
+Python library for writing CSV and XLS files from list of
+[OrderedDict](http://docs.python.org/2/library/collections.html#collections.OrderedDict)
+or just a list of lists containing 2-item tuples.
 
 # Installing 
 
