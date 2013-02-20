@@ -1,8 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import os
-from excellent import Writer
-from excellent.backends import CSV
+from excellent import Writer, CSV
 from sure import expect
 
 

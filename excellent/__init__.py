@@ -1,6 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 from StringIO import StringIO
+from excellent.backends import CSV, XL
+
+__all__ = ['CSV', 'XL', 'Writer']
 
 
 class Writer(object):

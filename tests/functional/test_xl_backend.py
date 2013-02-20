@@ -2,8 +2,7 @@
 # -*- coding: utf-8 -*-
 from os.path import dirname, abspath, join
 import xlrd
-from excellent import Writer
-from excellent.backends import XL
+from excellent import Writer, XL
 from sure import expect, scenario
 
 
@@ -106,4 +105,37 @@ def test_writing_to_multiple_sheets_in_same_book(context):
     writer.save()
 
     # Then the written data should be under Awesome Sheet
+    assert_first_sheets_are_the_same(context.tmpfile.name, LOCAL_FILE('awesome_sheet2.xls'))
+
+
+@scenario(with_tmp_file)
+def test_writing_multiple_times_to_same_sheet_and_multiple_sheets(context):
+    "Writer can switch between sheets and write multiple times to same sheet"
+    # Given a backend
+    backend = XL()
+
+    # And a writer
+    writer = Writer(backend=backend, output=context.tmpfile)
+
+    # And then switch to Awesome Sheet1 and this just adds this sheet
+    backend.use_sheet('Awesome Sheet1')
+
+    # When we write data to Awesome Sheet2
+    backend.use_sheet('Awesome Sheet2')
+    data = [{"Country": "Puerto Rico", "Revenue": 2340982}]
+    writer.write(data)
+
+    backend.use_sheet('Awesome Sheet1')
+    data = [{"Country": "Argentina", "Revenue": 14500025}]
+    writer.write(data)
+
+    # And switch back to Awesome Sheet 2 to write more data
+    backend.use_sheet('Awesome Sheet2')
+    data = [{"Country": "Colombia", "Revenue": 23409822},
+            {"Country": "Brazil", "Revenue": 19982793}]
+    writer.write(data)
+
+    writer.save()
+
+    # Then the written data to Awesome Sheets 1 and 2 should match
     assert_first_sheets_are_the_same(context.tmpfile.name, LOCAL_FILE('awesome_sheet2.xls'))
