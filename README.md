@@ -77,3 +77,7 @@ pip install -r requirements.txt
 make unit
 make functional
 ```
+
+# Licensing
+
+Please check the [`COPYING`](COPYING) file distributed with this library
