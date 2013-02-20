@@ -2,7 +2,6 @@ all: install_deps test
 
 filename=excellent-`python -c 'import excellent;print excellent.version'`.tar.gz
 
-localshop="http://localshop.staging.yipit.com:8900/"
 export PYTHONPATH:= ${PWD}
 
 install_deps:
@@ -27,9 +26,10 @@ clean:
 
 release: clean test publish
 	@printf "Exporting to $(filename)... "
-	@tar czf $(filename) excellent setup.py README.md
+	@tar czf $(filename) excellent setup.py README.md COPYING
 	@echo "DONE!"
 
 publish:
-	@python setup.py register -r localshop
-	@python setup.py sdist upload -r localshop
+	@python setup.py register 
+	@python setup.py sdist upload	
+
