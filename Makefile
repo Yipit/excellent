@@ -3,6 +3,7 @@ all: install_deps test
 filename=excellent-`python -c 'import excellent;print excellent.version'`.tar.gz
 
 localshop="http://localshop.staging.yipit.com:8900/"
+export PYTHONPATH:= ${PWD}
 
 install_deps:
 	@pip install -r requirements.txt
@@ -13,10 +14,10 @@ unit: clean
 functional: clean
 	@nosetests --with-coverage --stop --cover-package=excellent --verbosity=2 -s tests/functional/
 
-docs:
-	@PYTHONPATH=. steadymark README.md
+documentation:
+	@steadymark README.md
 
-test: unit functional docs
+test: unit functional documentation
 
 clean:
 	@printf "Cleaning up files that are already in .gitignore... "
