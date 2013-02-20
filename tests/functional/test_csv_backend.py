@@ -87,3 +87,37 @@ def test_writing_to_a_file():
         "Canada;33333",
         "",
     ]))
+
+
+def test_writing_twice():
+    "Writer should be able to write to a file"
+    # Given a temporary file
+    tmpfile = open('/tmp/test_1.csv', 'w+')
+
+    # And CSV writer pointing to that tempfile
+    writer = Writer(backend=CSV(delimiter=";"), output=tmpfile)
+
+    # And some data
+    writer.write([
+        OrderedDict([("Country", "USA"), ("Revenue", 22222)]),
+    ])
+    writer.write([
+        OrderedDict([("Country", "Canada"), ("Revenue", 33333)]),
+    ])
+
+    writer.write([
+        OrderedDict([("Country", "Italia"), ("Revenue", 1)]),
+    ])
+
+    # When the writer gets saved
+    writer.save()
+
+    # Then the file exists
+    os.path.exists(tmpfile.name).should.be.true
+    expect(open(tmpfile.name).read()).to.equal("\r\n".join([
+        "Country;Revenue",
+        "USA;22222",
+        "Canada;33333",
+        "Italia;1",
+        "",
+    ]))
