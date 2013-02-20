@@ -139,3 +139,4 @@ def test_writing_multiple_times_to_same_sheet_and_multiple_sheets(context):
 
     # Then the written data to Awesome Sheets 1 and 2 should match
     assert_first_sheets_are_the_same(context.tmpfile.name, LOCAL_FILE('awesome_sheet2.xls'))
+

@@ -1,9 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 from xlwt import XFStyle, Alignment, Workbook
+from .base import BaseBackend
 
 
-class XL(object):
+class XL(BaseBackend):
     def __init__(self, workbook=None):
         self.workbook = workbook or Workbook()
         self.current_sheet = None
@@ -23,6 +24,7 @@ class XL(object):
         if not self.current_sheet:
             self.current_sheet = self.workbook.add_sheet('Sheet1')
         sheet = self.current_sheet
+
         for i, row in enumerate(data):
             if i is 0 and self.current_row is 0:
                 self.write_row(sheet.row(0), row.keys(), self.get_header_style())
@@ -42,4 +44,4 @@ class XL(object):
 
     def save(self, output):
         self.workbook.save(output)
-        output.close()
+        super(XL, self).save(output)

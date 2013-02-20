@@ -2,8 +2,10 @@
 # -*- coding: utf-8 -*-
 import csv
 
+from .base import BaseBackend
 
-class CSV(object):
+
+class CSV(BaseBackend):
     def __init__(self, delimiter=','):
         self.delimiter = delimiter
 
@@ -14,6 +16,3 @@ class CSV(object):
                 csv_writer.writerow(row.keys())
 
             csv_writer.writerow(row.values())
-
-    def save(self, output):
-        output.close()
