@@ -40,7 +40,11 @@ def assert_first_sheets_are_the_same(file1, file2):
         get_rows = lambda sheet: map(get_cell_content,
                                      map(sheet.row, range(sheet.nrows)))
 
-        expect(get_rows(sh1)).to.equal(get_rows(sh2))
+        try:
+            expect(get_rows(sh1)).to.equal(get_rows(sh2))
+        except AssertionError as e:
+            raise AssertionError(
+                "In the sheet name {0}\n{1}".format(sh1.name, e.message))
 
 
 @scenario(with_tmp_file)
@@ -154,3 +158,30 @@ def test_writing_multiple_times_to_same_sheet_and_multiple_sheets(context):
 
     # Then the written data to Awesome Sheets 1 and 2 should match
     assert_first_sheets_are_the_same(context.tmpfile.name, LOCAL_FILE('awesome_sheet2.xls'))
+
+
+@scenario(with_tmp_file)
+def test_writing_to_same_sheet_multiple_times_without_no_sheet_name(context):
+    "Writer able to write  any number of times to the same sheet with no sheet name"
+    # Given a backend
+    backend = XL()
+
+    # And a writer
+    writer = Writer(backend=backend, output=context.tmpfile)
+
+    data = [
+        [("Country", "Argentina"), ("Revenue", 14500025)]
+    ]
+    writer.write(data)
+
+    data = [
+        OrderedDict([("Country", "Puerto Rico"), ("Revenue", 2340982)]),
+        OrderedDict([("Country", "Colombia"), ("Revenue", 23409822)]),
+        OrderedDict([("Country", "Brazil"), ("Revenue", 19982793)]),
+    ]
+    writer.write(data)
+
+    writer.save()
+
+    # Then the written data should be under Awesome Sheet
+    assert_first_sheets_are_the_same(context.tmpfile.name, LOCAL_FILE('awesome_sheet3.xls'))

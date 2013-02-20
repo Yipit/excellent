@@ -175,11 +175,14 @@ def test_write_with_no_current_sheet_creates_sheet():
     ("XL backend.write with no current_row should create "
      "a sheet named 'Sheet1'")
 
+    class MyXLBackend(XL):
+        get_sheets = Mock(return_value=[])
+
     # Given a workbook
     workbook = Mock()
     workbook.add_sheet.return_value.name = 'I WAS JUST CREATED'
     # When calling write right away
-    backend = XL(workbook)
+    backend = MyXLBackend(workbook)
     backend.write([], Mock())
 
     # Then the current sheet is a new one
@@ -194,6 +197,7 @@ def test_write_with_no_current_sheet_and_no_current_row():
     class MyXLBackend(XL):
         write_row = Mock()
         get_header_style = Mock(return_value='a cool style')
+        get_sheets = Mock(return_value=[])
 
     data = [
         {'Name': 'Chuck Norris', 'Power': 'unlimited'},

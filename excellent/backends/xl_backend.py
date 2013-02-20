@@ -22,15 +22,16 @@ class XL(BaseBackend):
 
     def write(self, data, output):
         if not self.current_sheet:
-            self.current_sheet = self.workbook.add_sheet('Sheet1')
+            self.use_sheet('Sheet1')
 
         sheet = self.current_sheet
         header_style = self.get_header_style()
 
-        for i, row in enumerate(data):
-            if i is 0 and self.current_row is 0:
+        for i, row in enumerate(data, self.current_row):
+            if self.current_row is 0:
                 self.write_row(sheet.row(0), row.keys(), header_style)
-            self.write_row(sheet.row(i + self.current_row + 1), row.values())
+            self.write_row(sheet.row(i + 1), row.values())
+            self.current_row = i + 1
 
     def get_sheets(self):
         return self.workbook._Workbook__worksheets
