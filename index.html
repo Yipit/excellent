@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <link href='https://fonts.googleapis.com/css?family=Chivo:900' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <title>Excellent by Yipit</title>
+  </head>
+
+  <body>
+    <div id="container">
+      <div class="inner">
+
+        <header>
+          <h1>Excellent</h1>
+          <h2></h2>
+        </header>
+
+        <section id="downloads" class="clearfix">
+          <a href="https://github.com/Yipit/excellent/zipball/master" id="download-zip" class="button"><span>Download .zip</span></a>
+          <a href="https://github.com/Yipit/excellent/tarball/master" id="download-tar-gz" class="button"><span>Download .tar.gz</span></a>
+          <a href="https://github.com/Yipit/excellent" id="view-on-github" class="button"><span>View on GitHub</span></a>
+        </section>
+
+        <hr>
+
+        <section id="main_content">
+          <h1>Excellent (v0.0.1)</h1>
+
+<p>Python library for writing CSV and XLS files from list of
+<a href="http://docs.python.org/2/library/collections.html#collections.OrderedDict">OrderedDict</a>
+or just a list of lists containing 2-item tuples.</p>
+
+<h1>Installing</h1>
+
+<div class="highlight"><pre>pip install excellent
+</pre></div>
+
+<h1>Writing <a href="http://en.wikipedia.org/wiki/Microsoft_Excel">Excel</a> files</h1>
+
+<div class="highlight"><pre><span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">OrderedDict</span>
+<span class="kn">from</span> <span class="nn">excellent</span> <span class="kn">import</span> <span class="n">Writer</span><span class="p">,</span> <span class="n">XL</span>
+
+<span class="n">output</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s">"superhero-database.xls"</span><span class="p">,</span> <span class="s">"wb"</span><span class="p">)</span>
+<span class="n">sheet_manager</span> <span class="o">=</span> <span class="n">XL</span><span class="p">()</span>
+
+<span class="n">excel</span> <span class="o">=</span> <span class="n">Writer</span><span class="p">(</span><span class="n">sheet_manager</span><span class="p">,</span> <span class="n">output</span><span class="p">)</span>
+
+<span class="n">sheet_manager</span><span class="o">.</span><span class="n">use_sheet</span><span class="p">(</span><span class="s">"Weaknesses"</span><span class="p">)</span>
+<span class="n">excel</span><span class="o">.</span><span class="n">write</span><span class="p">([</span>
+    <span class="n">OrderedDict</span><span class="p">([(</span><span class="s">'Superhero'</span><span class="p">,</span> <span class="s">'Superman'</span><span class="p">),</span> <span class="p">(</span><span class="s">'Weakness'</span><span class="p">,</span> <span class="s">'Kryptonite'</span><span class="p">)]),</span>
+    <span class="n">OrderedDict</span><span class="p">([(</span><span class="s">'Superhero'</span><span class="p">,</span> <span class="s">'Spiderman'</span><span class="p">),</span> <span class="p">(</span><span class="s">'Weakness'</span><span class="p">,</span> <span class="s">'Maryjane'</span><span class="p">)]),</span>
+<span class="p">])</span>
+
+<span class="n">sheet_manager</span><span class="o">.</span><span class="n">use_sheet</span><span class="p">(</span><span class="s">"Special Powers"</span><span class="p">)</span>
+<span class="n">excel</span><span class="o">.</span><span class="n">write</span><span class="p">([</span>
+    <span class="n">OrderedDict</span><span class="p">([(</span><span class="s">'Superhero'</span><span class="p">,</span> <span class="s">'Superman'</span><span class="p">),</span> <span class="p">(</span><span class="s">'Super Powers'</span><span class="p">,</span> <span class="s">'X-Ray vision'</span><span class="p">)]),</span>
+    <span class="n">OrderedDict</span><span class="p">([(</span><span class="s">'Superhero'</span><span class="p">,</span> <span class="s">'Spiderman'</span><span class="p">),</span> <span class="p">(</span><span class="s">'Super Powers'</span><span class="p">,</span> <span class="s">'Release web'</span><span class="p">)]),</span>
+    <span class="n">OrderedDict</span><span class="p">([(</span><span class="s">'Superhero'</span><span class="p">,</span> <span class="s">'Batman'</span><span class="p">),</span> <span class="p">(</span><span class="s">'Super Powers'</span><span class="p">,</span> <span class="s">'Money'</span><span class="p">)]),</span>
+<span class="p">])</span>
+
+<span class="n">sheet_manager</span><span class="o">.</span><span class="n">use_sheet</span><span class="p">(</span><span class="s">"Weaknesses"</span><span class="p">)</span>
+<span class="n">excel</span><span class="o">.</span><span class="n">write</span><span class="p">([</span>
+    <span class="n">OrderedDict</span><span class="p">([(</span><span class="s">'Superhero'</span><span class="p">,</span> <span class="s">'Batman'</span><span class="p">),</span> <span class="p">(</span><span class="s">'Weakness'</span><span class="p">,</span> <span class="s">'Social Interactions'</span><span class="p">)]),</span>
+<span class="p">])</span>
+
+<span class="c"># save it</span>
+
+<span class="n">excel</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+
+<span class="c"># now open superhero-database.xls and be happy</span>
+</pre></div>
+
+<p><img src="https://raw.github.com/Yipit/excellent/master/docs/superhero-database.png?login=suneel0101&amp;token=79faadd827d16c56064ea3845850f7b8" alt="https://raw.github.com/Yipit/excellent/master/docs/superhero-database.png?login=suneel0101&amp;token=79faadd827d16c56064ea3845850f7b8"></p>
+
+<h1>Writing CSV files</h1>
+
+<div class="highlight"><pre><span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">OrderedDict</span>
+<span class="kn">from</span> <span class="nn">excellent</span> <span class="kn">import</span> <span class="n">Writer</span><span class="p">,</span> <span class="n">CSV</span>
+
+<span class="n">output</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s">"pokemon-database.csv"</span><span class="p">,</span> <span class="s">"w"</span><span class="p">)</span>
+<span class="n">csv</span> <span class="o">=</span> <span class="n">Writer</span><span class="p">(</span><span class="n">CSV</span><span class="p">(</span><span class="n">delimiter</span><span class="o">=</span><span class="s">';'</span><span class="p">),</span> <span class="n">output</span><span class="p">)</span>
+
+<span class="n">csv</span><span class="o">.</span><span class="n">write</span><span class="p">([</span>
+    <span class="n">OrderedDict</span><span class="p">([(</span><span class="s">'Name'</span><span class="p">,</span> <span class="s">'Pikachu'</span><span class="p">),</span> <span class="p">(</span><span class="s">'Type'</span><span class="p">,</span> <span class="s">'Electric'</span><span class="p">)]),</span>
+    <span class="n">OrderedDict</span><span class="p">([(</span><span class="s">'Name'</span><span class="p">,</span> <span class="s">'Jigglypuff'</span><span class="p">),</span> <span class="p">(</span><span class="s">'Type'</span><span class="p">,</span> <span class="s">'Normal'</span><span class="p">)]),</span>
+    <span class="n">OrderedDict</span><span class="p">([(</span><span class="s">'Name'</span><span class="p">,</span> <span class="s">'Mew'</span><span class="p">),</span> <span class="p">(</span><span class="s">'Type'</span><span class="p">,</span> <span class="s">'Psychic'</span><span class="p">)]),</span>
+<span class="p">])</span>
+
+<span class="c"># save it</span>
+<span class="n">csv</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+
+<span class="c"># now open pokemon.csv and be happy</span>
+</pre></div>
+
+<h2>pokemon-database.csv:</h2>
+
+<pre><code>Name;Type
+Pikachu;Electric
+Jigglypuff;Normal
+Mew;Psychic
+</code></pre>
+
+<h1>Hacking</h1>
+
+<h2>Install dependencies</h2>
+
+<div class="highlight"><pre>pip install -r requirements.txt
+</pre></div>
+
+<h2>Run the tests</h2>
+
+<div class="highlight"><pre>make unit
+make functional
+</pre></div>
+
+<h1>Licensing</h1>
+
+<p>Please check the <a href="COPYING"><code>COPYING</code></a> file distributed with this library</p>
+        </section>
+
+        <footer>
+          Excellent is maintained by <a href="https://github.com/Yipit">Yipit</a><br>
+          This page was generated by <a href="http://pages.github.com">GitHub Pages</a>. Tactile theme by <a href="http://twitter.com/jasonlong">Jason Long</a>.
+        </footer>
+
+        
+      </div>
+    </div>
+  </body>
+</html>
