@@ -19,6 +19,11 @@
 from xlwt import XFStyle, Alignment, Workbook
 from .base import BaseBackend
 
+default_style = XFStyle()
+bold_style = XFStyle()
+bold_style.alignment.horz = Alignment.HORZ_RIGHT
+bold_style.font.bold = True
+
 
 class XL(BaseBackend):
     def __init__(self, workbook=None):
@@ -27,14 +32,11 @@ class XL(BaseBackend):
         self.current_row = 0
 
     def get_header_style(self):
-        style = XFStyle()
-        style.alignment.horz = Alignment.HORZ_RIGHT
-        style.font.bold = True
-        return style
+        return bold_style
 
     def write_row(self, row, values, style=None):
         for index, value in enumerate(values):
-            row.write(index, value, style or XFStyle())
+            row.write(index, value, style or default_style)
 
     def write(self, data, output):
         if not self.current_sheet:

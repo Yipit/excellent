@@ -19,9 +19,10 @@
 from __future__ import unicode_literals
 
 from collections import OrderedDict
-from mock import Mock, call, patch
+from mock import Mock, call
 from sure import expect
 from excellent import XL
+from excellent.backends.xl_backend import default_style
 from xlwt import Alignment
 
 
@@ -172,8 +173,7 @@ def test_write_row_passing_style():
     ])
 
 
-@patch('excellent.backends.xl_backend.XFStyle')
-def test_write_row_passing_no_style(XFStyle):
+def test_write_row_passing_no_style():
     ("XL backend.write_row should write row using appropriate "
      "index, value and style")
     row = Mock()
@@ -182,8 +182,8 @@ def test_write_row_passing_no_style(XFStyle):
     xl_backend.write_row(row, ['Cell One', 'Cell Two'])
 
     row.write.assert_has_calls([
-        call(0, 'Cell One', XFStyle.return_value),
-        call(1, 'Cell Two', XFStyle.return_value),
+        call(0, 'Cell One', default_style),
+        call(1, 'Cell Two', default_style),
     ])
 
 
