@@ -16,6 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import copy
 from xlwt import XFStyle, Alignment, Workbook
 from .base import BaseBackend
 
@@ -24,21 +25,57 @@ bold_style = XFStyle()
 bold_style.alignment.horz = Alignment.HORZ_RIGHT
 bold_style.font.bold = True
 
+# Excel has issues when creating too many styles/fonts, hence we use
+# a cache to reuse font instances (see FAQ#13 http://poi.apache.org/faq.html)
+STYLE_CACHE = {}
+
+
+def hash_style(style):
+    """
+    This ugly function allows us to get a hash for xlwt Style instances. The
+    hash allows us to determine that two Style instances are the same, even if
+    they are different objects.
+    """
+    font_attrs = ["font", "alignment", "borders", "pattern", "protection"]
+    attrs_hashes = [hash(frozenset(getattr(style, attr).__dict__.items())) for attr in font_attrs]
+    return hash(sum(attrs_hashes + [hash(style.num_format_str)]))
+
 
 class XL(BaseBackend):
-    def __init__(self, workbook=None):
+    def __init__(self, workbook=None, default_style=default_style):
         self.workbook = workbook or Workbook()
         self.current_sheet = None
         self.current_row = 0
+        self.default_style = default_style
 
     def get_header_style(self):
         return bold_style
 
-    def write_row(self, row, values, style=None):
-        for index, value in enumerate(values):
-            row.write(index, value, style or default_style)
+    def write_row(self, row, values, style=None, **kwargs):
+        style = style or self.default_style
 
-    def write(self, data, output):
+        if kwargs:
+            # If there are additional changes in kwargs, we don't want to modify
+            # the original style, so we make a copy
+            style = copy.deepcopy(style)
+
+            if 'bold' in kwargs:
+                style.font.bold = kwargs['bold']
+            if 'bottom_border' in kwargs:
+                style.borders.bottom = 2
+            if 'format_string' in kwargs:
+                style.num_format_str = kwargs['format_string']
+
+        style_hash = hash_style(style)
+        if style_hash in STYLE_CACHE:
+            style = STYLE_CACHE[style_hash]
+        else:
+            STYLE_CACHE[style_hash] = style
+
+        for index, value in enumerate(values):
+            row.write(index, value, style)
+
+    def write(self, data, output, style=None, **kwargs):
         if not self.current_sheet:
             self.use_sheet('Sheet1')
 
@@ -47,8 +84,8 @@ class XL(BaseBackend):
 
         for i, row in enumerate(data, self.current_row):
             if self.current_row is 0:
-                self.write_row(sheet.row(0), row.keys(), header_style)
-            self.write_row(sheet.row(i + 1), row.values())
+                self.write_row(sheet.row(0), row.keys(), header_style, **kwargs)
+            self.write_row(sheet.row(i + 1), row.values(), style=style, **kwargs)
             self.current_row = i + 1
 
     def get_sheets(self):

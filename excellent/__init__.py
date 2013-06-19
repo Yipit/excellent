@@ -29,9 +29,9 @@ class Writer(object):
         self.backend = backend
         self.buffer = output or StringIO()
 
-    def write(self, data):
+    def write(self, data, **kwargs):
         data = map(OrderedDict, data)
-        self.backend.write(data, self.buffer)
+        self.backend.write(data, self.buffer, **kwargs)
 
     def save(self):
         self.backend.save(self.buffer)

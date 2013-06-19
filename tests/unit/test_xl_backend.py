@@ -22,7 +22,7 @@ from collections import OrderedDict
 from mock import Mock, call
 from sure import expect
 from excellent import XL
-from excellent.backends.xl_backend import default_style
+from excellent.backends.xl_backend import default_style, STYLE_CACHE
 from xlwt import Alignment
 
 
@@ -164,12 +164,12 @@ def test_write_row_passing_style():
 
     # When .write_row is called
     xl_backend = XL()
-    xl_backend.write_row(row, ['Cell One', 'Cell Two'], 'some-style')
+    xl_backend.write_row(row, ['Cell One', 'Cell Two'], default_style)
 
     # Then row.write is called appropriately
     row.write.assert_has_calls([
-        call(0, 'Cell One', 'some-style'),
-        call(1, 'Cell Two', 'some-style'),
+        call(0, 'Cell One', default_style),
+        call(1, 'Cell Two', default_style),
     ])
 
 
@@ -229,8 +229,8 @@ def test_write_with_no_current_sheet_and_no_current_row():
 
     MyXLBackend.write_row.assert_has_calls([
         call("this is the row 0", ["Name", "Power"], 'a cool style'),
-        call("this is the row 1", ["Chuck Norris", "unlimited"]),
-        call("this is the row 2", ["Steven Seagal", "break necks"]),
+        call("this is the row 1", ["Chuck Norris", "unlimited"], style=None),
+        call("this is the row 2", ["Steven Seagal", "break necks"], style=None),
     ])
 
 
@@ -271,8 +271,8 @@ def test_write_with_current_sheet_no_current_row_and_no_rows():
     # Then data should be written to the existing row
     MyXLBackend.write_row.assert_has_calls([
         call("mocked row 0", ["Name", "Power"], 'a cool style'),
-        call("mocked row 1", ["Chuck Norris", "unlimited"]),
-        call("mocked row 2", ["Steven Seagal", "break necks"]),
+        call("mocked row 1", ["Chuck Norris", "unlimited"], style=None),
+        call("mocked row 2", ["Steven Seagal", "break necks"], style=None),
     ])
 
 
@@ -312,6 +312,52 @@ def test_write_with_current_sheet_and_current_row():
 
     # Then data should be written to the existing row
     MyXLBackend.write_row.assert_has_calls([
-        call("mocked row 10", ["Chuck Norris", "unlimited"]),
-        call("mocked row 11", ["Steven Seagal", "break necks"]),
+        call("mocked row 10", ["Chuck Norris", "unlimited"], style=None),
+        call("mocked row 11", ["Steven Seagal", "break necks"], style=None),
     ])
+
+
+def test_xl_style_cache_works():
+    ("The XL backend should cache styles that are the same instead of creating "
+    "a new style each time")
+
+    STYLE_CACHE.clear()
+
+    backend = XL()
+    output = Mock()
+
+    mock_row = Mock()
+
+    backend.write_row(
+        mock_row,
+        [['Chuck Norris', 'Power']],
+        output=output,
+        bold=True,
+    )
+
+    STYLE_CACHE.should.have.length_of(1)
+    bold_style = STYLE_CACHE.values()[0]
+
+    backend.write_row(
+        mock_row,
+        [['Name', 'Some other guy']],
+        output=output,
+    )
+
+    STYLE_CACHE.should.have.length_of(2)
+    non_bold_style = [style for style in STYLE_CACHE.values() if style != bold_style][0]
+
+    backend.write_row(
+        mock_row,
+        [['Name', 'Another person']],
+        output=output,
+        bold=True,
+    )
+
+    mock_row.write.assert_has_calls([
+        call(0, ['Chuck Norris', 'Power'], bold_style),
+        call(0, ['Name', 'Some other guy'], non_bold_style),
+        call(0, ['Name', 'Another person'], bold_style),
+    ])
+
+    STYLE_CACHE.should.have.length_of(2)
