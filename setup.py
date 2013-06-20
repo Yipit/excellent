@@ -31,7 +31,7 @@ def get_packages():
     return packages
 
 setup(name='excellent',
-    version='0.0.2',
+    version='0.0.3',
     description='Python library for writing CSV and XLS files',
     author=u'Yipit',
     author_email='coders@yipit.com',
