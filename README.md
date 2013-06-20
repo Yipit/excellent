@@ -46,7 +46,7 @@ excel.save()
 # now open superhero-database.xls and be happy
 ```
 
-![https://raw.github.com/Yipit/excellent/master/docs/superhero-database.png?login=suneel0101&token=79faadd827d16c56064ea3845850f7b8](https://raw.github.com/Yipit/excellent/master/docs/superhero-database.png?login=suneel0101&token=79faadd827d16c56064ea3845850f7b8)
+![https://raw.github.com/Yipit/excellent/master/docs/superhero-database.png](https://raw.github.com/Yipit/excellent/master/docs/superhero-database.png)
 
 # Writing CSV files
 ```python
@@ -74,6 +74,60 @@ csv.save()
     Pikachu;Electric
     Jigglypuff;Normal
     Mew;Psychic
+
+
+# Styles
+
+```python
+excel.write([
+    OrderedDict([('Superhero', 'Batman'), ('Weakness', 'Social Interactions')]),
+    ],
+    bold=True,
+    bottom_border=True,
+)
+```
+
+# Format Strings
+
+```python
+excel.write([
+    OrderedDict([('Superhero', 'Batman'), ('Weakness', 'Social Interactions')]),
+    ],
+    format_string='"$"#,##0_);("$"#,##',
+)
+```
+
+See [the examples](https://github.com/python-excel/xlwt/blob/master/xlwt/examples/num_formats.py) for uses.
+
+# Custom Styles
+
+```python
+from xlwt import XFStyle, Alignment
+alignment = Alignment()
+alignment.horz = Alignment.HORZ_RIGHT
+style = XFStyle()
+style.alignment = alignment
+
+excel.write([
+    OrderedDict([('Superhero', 'Batman'), ('Weakness', 'Social Interactions')]),
+    ],
+    style=style,
+)
+```
+
+## Default Style
+
+```python
+from xlwt import XFStyle, Alignment
+alignment = Alignment()
+alignment.horz = Alignment.HORZ_RIGHT
+style = XFStyle()
+style.alignment = alignment
+
+backend = XL(default_style=style)
+output = open("database.csv", "w")
+writer = Writer(backend=backend, output=output)
+```
 
 # Hacking
 
