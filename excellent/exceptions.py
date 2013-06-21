@@ -1,0 +1,2 @@
+class TooManyRowsError(ValueError):
+    pass

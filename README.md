@@ -129,6 +129,10 @@ output = open("database.csv", "w")
 writer = Writer(backend=backend, output=output)
 ```
 
+# Exceptions
+
+`Excellent.exceptions.TooManyRowsError`: This exception is raised if too many rows are written to an excel spreadsheet.
+
 # Hacking
 
 ## Install dependencies

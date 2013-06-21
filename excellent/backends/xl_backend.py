@@ -18,7 +18,9 @@
 
 import copy
 from xlwt import XFStyle, Alignment, Workbook
+from excellent.exceptions import TooManyRowsError
 from .base import BaseBackend
+
 
 default_style = XFStyle()
 bold_style = XFStyle()
@@ -79,14 +81,21 @@ class XL(BaseBackend):
         if not self.current_sheet:
             self.use_sheet('Sheet1')
 
-        sheet = self.current_sheet
         header_style = self.get_header_style()
 
         for i, row in enumerate(data, self.current_row):
             if self.current_row is 0:
-                self.write_row(sheet.row(0), row.keys(), header_style, **kwargs)
-            self.write_row(sheet.row(i + 1), row.values(), style=style, **kwargs)
+                self.write_row(self.get_row(0), row.keys(), header_style, **kwargs)
+            self.write_row(self.get_row(i + 1), row.values(), style=style, **kwargs)
             self.current_row = i + 1
+
+    def get_row(self, row_index):
+        sheet = self.current_sheet
+        try:
+            return sheet.row(row_index)
+        except ValueError:
+            # The max number of rows have been written
+            raise TooManyRowsError()
 
     def get_sheets(self):
         return self.workbook._Workbook__worksheets

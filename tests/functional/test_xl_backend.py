@@ -22,6 +22,7 @@ from xlwt import XFStyle
 import xlrd
 from collections import OrderedDict
 from excellent import Writer, XL
+from excellent.exceptions import TooManyRowsError
 from sure import expect, scenario
 
 
@@ -357,3 +358,20 @@ def test_writing_with_format_strings(context):
 
     # Then the written data should be under Awesome Sheet
     assert_first_sheets_are_the_same(context.tmpfile.name, LOCAL_FILE('awesome_sheet6.xls'))
+
+
+@scenario(with_tmp_file)
+def test_writing_too_many_rows_raises_error(context):
+    "Writer should raise an error if we try to write too many rows"
+
+    backend= XL()
+    writer = Writer(backend=backend, output=context.tmpfile)
+
+    for index in range(65535):
+        writer.write(
+            [[("Country", "Argentina"), ("Revenue", 14500025)]],
+        )
+
+    (writer.write.when
+        .called_with([[("Country", "Argentina"), ("Revenue", 14500025)]])
+        .should.throw(TooManyRowsError))
