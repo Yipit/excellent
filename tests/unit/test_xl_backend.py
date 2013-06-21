@@ -361,3 +361,23 @@ def test_xl_style_cache_works():
     ])
 
     STYLE_CACHE.should.have.length_of(2)
+
+def test_writing_with_none_format_string():
+    "Writer should not use a format string if None is passed"
+
+    STYLE_CACHE.clear()
+
+    backend = XL()
+    output = Mock()
+
+    mock_row = Mock()
+
+    backend.write_row(
+        mock_row,
+        [['Chuck Norris', 'Power']],
+        format_string=None,
+    )
+
+    STYLE_CACHE.should.have.length_of(1)
+    active_style = STYLE_CACHE.values()[0]
+    active_style.num_format_str.should.equal("General")

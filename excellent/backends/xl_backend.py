@@ -65,7 +65,7 @@ class XL(BaseBackend):
                 style.font.bold = kwargs['bold']
             if 'bottom_border' in kwargs:
                 style.borders.bottom = 2
-            if 'format_string' in kwargs:
+            if 'format_string' in kwargs and kwargs['format_string']:
                 style.num_format_str = kwargs['format_string']
 
         style_hash = hash_style(style)
