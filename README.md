@@ -1,4 +1,4 @@
-# Excellent (v0.0.1)
+# Excellent (v0.0.4)
 
 Python library for writing CSV and XLS files from list of
 [OrderedDict](http://docs.python.org/2/library/collections.html#collections.OrderedDict)
