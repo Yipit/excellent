@@ -1,3 +1,5 @@
+CUSTOM_PIP_INDEX=public
+
 all: install_deps test
 
 filename=excellent-`python -c 'import excellent;print excellent.version'`.tar.gz
@@ -29,7 +31,6 @@ release: clean test publish
 	@tar czf $(filename) excellent setup.py README.md COPYING
 	@echo "DONE!"
 
-publish:
-	@python setup.py register 
-	@python setup.py sdist upload	
-
+publish:	
+	echo "Uploading to '$(CUSTOM_PIP_INDEX)'"
+	python setup.py sdist upload -r "$(CUSTOM_PIP_INDEX)"
