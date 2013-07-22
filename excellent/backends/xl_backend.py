@@ -31,6 +31,9 @@ bold_style.font.bold = True
 # a cache to reuse font instances (see FAQ#13 http://poi.apache.org/faq.html)
 STYLE_CACHE = {}
 
+EXCEL_CHAR_WIDTH = 275
+EXCEL_MIN_COL_WIDTH = 3000
+
 
 def hash_style(style):
     """
@@ -43,6 +46,10 @@ def hash_style(style):
     return hash(sum(attrs_hashes + [hash(style.num_format_str)]))
 
 
+def get_column_width(value):
+    return max(len(value) * EXCEL_CHAR_WIDTH, EXCEL_MIN_COL_WIDTH)
+
+
 class XL(BaseBackend):
     def __init__(self, workbook=None, default_style=default_style):
         self.workbook = workbook or Workbook()
@@ -53,7 +60,7 @@ class XL(BaseBackend):
     def get_header_style(self):
         return bold_style
 
-    def write_row(self, row, values, style=None, **kwargs):
+    def write_row(self, row, values, style=None, header_row=False, **kwargs):
         style = style or self.default_style
 
         if kwargs:
@@ -75,6 +82,9 @@ class XL(BaseBackend):
             STYLE_CACHE[style_hash] = style
 
         for index, value in enumerate(values):
+            if header_row:
+                column_width = get_column_width(value=value)
+                self.current_sheet.col(index).width = column_width
             row.write(index, value, style)
 
     def write(self, data, output, style=None, **kwargs):
@@ -85,8 +95,8 @@ class XL(BaseBackend):
 
         for i, row in enumerate(data, self.current_row):
             if self.current_row is 0:
-                self.write_row(self.get_row(0), row.keys(), header_style, **kwargs)
-            self.write_row(self.get_row(i + 1), row.values(), style=style, **kwargs)
+                self.write_row(self.get_row(0), row.keys(), header_style, header_row=True, **kwargs)
+            self.write_row(self.get_row(i + 1), row.values(),  style=style, header_row=False, **kwargs)
             self.current_row = i + 1
 
     def get_row(self, row_index):

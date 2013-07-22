@@ -22,7 +22,7 @@ from collections import OrderedDict
 from mock import Mock, call
 from sure import expect
 from excellent import XL
-from excellent.backends.xl_backend import default_style, STYLE_CACHE
+from excellent.backends.xl_backend import default_style, STYLE_CACHE, get_column_width
 from xlwt import Alignment
 
 
@@ -228,9 +228,9 @@ def test_write_with_no_current_sheet_and_no_current_row():
     backend.write(data, output)
 
     MyXLBackend.write_row.assert_has_calls([
-        call("this is the row 0", ["Name", "Power"], 'a cool style'),
-        call("this is the row 1", ["Chuck Norris", "unlimited"], style=None),
-        call("this is the row 2", ["Steven Seagal", "break necks"], style=None),
+        call("this is the row 0", ["Name", "Power"], 'a cool style', header_row=True),
+        call("this is the row 1", ["Chuck Norris", "unlimited"], style=None, header_row=False),
+        call("this is the row 2", ["Steven Seagal", "break necks"], style=None, header_row=False),
     ])
 
 
@@ -270,9 +270,9 @@ def test_write_with_current_sheet_no_current_row_and_no_rows():
 
     # Then data should be written to the existing row
     MyXLBackend.write_row.assert_has_calls([
-        call("mocked row 0", ["Name", "Power"], 'a cool style'),
-        call("mocked row 1", ["Chuck Norris", "unlimited"], style=None),
-        call("mocked row 2", ["Steven Seagal", "break necks"], style=None),
+        call("mocked row 0", ["Name", "Power"], 'a cool style', header_row=True),
+        call("mocked row 1", ["Chuck Norris", "unlimited"], style=None, header_row=False),
+        call("mocked row 2", ["Steven Seagal", "break necks"], style=None, header_row=False),
     ])
 
 
@@ -312,8 +312,8 @@ def test_write_with_current_sheet_and_current_row():
 
     # Then data should be written to the existing row
     MyXLBackend.write_row.assert_has_calls([
-        call("mocked row 10", ["Chuck Norris", "unlimited"], style=None),
-        call("mocked row 11", ["Steven Seagal", "break necks"], style=None),
+        call("mocked row 10", ["Chuck Norris", "unlimited"], style=None, header_row=False),
+        call("mocked row 11", ["Steven Seagal", "break necks"], style=None, header_row=False),
     ])
 
 
@@ -362,6 +362,7 @@ def test_xl_style_cache_works():
 
     STYLE_CACHE.should.have.length_of(2)
 
+
 def test_writing_with_none_format_string():
     "Writer should not use a format string if None is passed"
 
@@ -381,3 +382,9 @@ def test_writing_with_none_format_string():
     STYLE_CACHE.should.have.length_of(1)
     active_style = STYLE_CACHE.values()[0]
     active_style.num_format_str.should.equal("General")
+
+
+def test_get_column_width():
+    "Get column width should return the size of the 'value' for that column or the miniumum width, whichever is larger."
+    get_column_width("a"*10).should.equal(3000)
+    get_column_width("a"*100).should.equal(27500)
